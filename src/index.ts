@@ -2,7 +2,7 @@ import './colorful'
 import * as fs from 'fs'
 import * as readline from 'readline'
 import * as path from 'path'
-import { createPackage, createTsconfig, createGulpfile } from './create-file'
+import { createFile, createPackage, createTsconfig, createGulpfile } from './create-file'
 import { Package, TsConfig } from './interfaces'
 import ReadlineHelper from './readline-helper'
 
@@ -21,6 +21,7 @@ let projectEnv: 'node' | 'browser'
 let pkg: Package = {
     name: projectName,
     version: 'v1.0.0',
+    main: './src/index.ts',
 }
 let tsCfg: TsConfig = {
     compilerOptions: {
@@ -34,25 +35,32 @@ let tsCfg: TsConfig = {
 console.log( '配置package.json...'.magenta )
 rlHelper.newline()
 
-rlHelper.question( `项目名称：(${pkg.name})`, ( name ) => {
+rlHelper.question( `name: (${pkg.name})`, ( name ) => {
     if( name ){
         pkg.name = name
     }
 })
 .then( () => {
-    return rlHelper.question( `项目版本：(${pkg.version})`, ( version ) => {
+    return rlHelper.question( `version: (${pkg.version})`, ( version ) => {
         if( version ){
             pkg.version = version
         }    
     })
 })
 .then( () => {
-    return rlHelper.question( '项目描述：', ( description ) => {
+    return rlHelper.question( 'description: ', ( description ) => {
         pkg.description = description || ''
     })
 })
 .then( () => {
-    return rlHelper.question( '作者：', ( author ) => {
+    return rlHelper.question( `main: (${pkg.main})`, ( main ) => {
+        if( main ){
+            pkg.main = main
+        }    
+    })
+})
+.then( () => {
+    return rlHelper.question( 'author: ', ( author ) => {
         if( author ){
             pkg.author = author
         }    
@@ -107,10 +115,11 @@ rlHelper.question( `项目名称：(${pkg.name})`, ( name ) => {
         }
     }
 
-    console.log( '创建src目录...' )
+    console.log( '初始化项目文件...' )
     if( !fs.existsSync( path.resolve( process.cwd(), 'src' ) ) ){
         fs.mkdirSync( path.resolve( process.cwd(), 'src' ) )
     }    
+    return createFile( path.join( process.cwd(), pkg.main ), '' )
 })
 .then( () => {            
     console.log( '创建package.json文件...' )
