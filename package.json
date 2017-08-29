@@ -1,0 +1,23 @@
+{
+  "name": "ts-cli",
+  "version": "1.0.0",
+  "description": "init a typescript project",
+  "main": "./dist/index.js",
+  "bin": {
+    "ts-cli": "./bin/ts-cli.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "blueni",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "7.0.42",
+    "browserify": "^14.4.0",
+    "gulp": "^3.9.1",
+    "gulp-typescript": "^3.2.2",
+    "tsify": "^3.0.1",
+    "typescript": "^2.4.2",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}
