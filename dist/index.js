@@ -1,4 +1,5 @@
 "use strict";
+/// <reference path="./node.expand.d.ts" />
 Object.defineProperty(exports, "__esModule", { value: true });
 require("./colorful");
 const fs = require("fs");
@@ -26,7 +27,7 @@ let tsCfg = {
         noResolve: true
     }
 };
-// 创建 package.json文件
+// 配置 package.json文件
 console.log('配置package.json...'.magenta);
 rlHelper.newline();
 rlHelper.question(`name: (${pkg.name})`, (name) => {
@@ -70,21 +71,21 @@ rlHelper.question(`name: (${pkg.name})`, (name) => {
     rlHelper.newline();
 })
     .then(() => {
-    let targets = ['es3', 'es5', 'es6', 'es2016', 'es2017', 'exnext'];
-    return rlHelper.select('生成js版本：', targets.map(v => v.toUpperCase()))
+    let targets = ['ES3', 'ES5', 'ES6', 'ES2016', 'ES2017', 'ESNext'];
+    return rlHelper.select('生成js版本：', targets)
         .then((index) => {
-        tsCfg.compilerOptions.target = targets[index];
+        tsCfg.compilerOptions.target = targets[index].toLowerCase();
     });
 })
     .then(() => {
-    let rules = ['none', 'commonjs', 'amd', 'umd', 'system', 'es2015', 'exnext'];
-    return rlHelper.select('生成js模块规范：', rules.map(v => v.toUpperCase()))
+    let rules = ['None', 'CommonJs', 'AMD', 'UMD', 'System', 'ES2015', 'ESNext'];
+    return rlHelper.select('生成js模块规范：', rules)
         .then((index) => {
         let rule = rules[index];
         if (rule == 'commonjs') {
             projectEnv = 'node';
         }
-        tsCfg.compilerOptions.module = rule;
+        tsCfg.compilerOptions.module = rule.toLowerCase();
     });
 })
     .then(() => {

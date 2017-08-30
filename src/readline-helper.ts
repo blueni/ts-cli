@@ -26,29 +26,31 @@ export default class ReadlineHelper{
         let rl  = this.rl
         let { output, input } = rl
         let len = options.length
-        let lastItem = ''
+        let lastLength = 0
         let current = 0
 
         rl.write( `${question}(${'上下方向键选择，enter键确定'.cyan})` )
         this.newline()
 
         const _getStrLength = ( str: string ): number => {            
-            return str.replace( /[\u4e00-\u9fa5]/g, ' ' ).length
+            return str.replace( /[\u4e00-\u9fa5]/g, '  ' ).length
         }
 
         const _list = ( num: number = 0 ): void => {
-            if( lastItem ){
-                readline.moveCursor( output, -_getStrLength( lastItem ), -len )
+            if( lastLength ){
+                readline.moveCursor( output, -lastLength, -len - 1 )
                 readline.clearScreenDown( output )
             }
             
-            lastItem = ''
             options.forEach( ( item, index ) => {
                 item = '> ' + item
                 item = index == num ? item.green : item
                 rl.write( item + '\n' )
-                lastItem = item
+                if( index == len - 1 ){
+                    lastLength = _getStrLength( item ) + 2
+                }
             })
+            this.newline()
         }
 
         _list()
@@ -68,7 +70,13 @@ export default class ReadlineHelper{
 
                     case 'return':
                     case 'enter':
+                        input.removeListener( 'keypress', _handleKeypress )
                         resolve( current )
+                        break
+
+                    default:
+                        readline.moveCursor( output, -1 , 0 )
+                        readline.clearScreenDown( output )
                 }                
             })
         })
